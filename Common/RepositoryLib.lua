@@ -139,16 +139,6 @@ function EnableOrb(bool)
 	end
 end
 
-function Buffed()
-	for i = 0, myHero.buffCount do 
-    local buff = myHero:GetBuff(i)
-		if buff and buff.type == 2 then 
-			return true
-		end
-	end
-	return false
-end
-
 local abs = math.abs 
 local deg = math.deg 
 local acos = math.acos
@@ -267,4 +257,40 @@ end
 
 function IGdmg(target)
     return 70 + 20 * myHero.levelData.lvl
+end
+
+function GetFleeMinion(range,team)
+	local best = nil
+	local closest = math.huge
+	for i = 1, Game.MinionCount() do
+		local m = Game.Minion(i)
+		if m.team == team and GetDistance(myHero.pos,m.pos) < range then
+			local DistanceM = GetDistance(myHero.pos, mousePos)
+			local DistanceP = GetDistance(myHero.pos + (m.pos - myHero.pos):Normalized() * 400, mousePos)
+			local DistanceC = GetDistance(myHero.pos + (m.pos - myHero.pos):Normalized() * 700, myHero.pos)
+			if DistanceP < DistanceM and DistanceC < closest then
+				best = m
+				closest = DistanceC
+			end
+		end
+	end
+	return best
+end
+
+function GetFleeHero(range)
+	local best = nil
+	local closest = math.huge
+	for i = 1, Game.HeroCount() do
+		local m = Game.Hero(i)
+		if m.team == myHero.team and GetDistance(myHero.pos,m.pos) < range then
+			local DistanceM = GetDistance(myHero.pos, mousePos)
+			local DistanceP = GetDistance(myHero.pos + (m.pos - myHero.pos):Normalized() * 400, mousePos)
+			local DistanceC = GetDistance(myHero.pos + (m.pos - myHero.pos):Normalized() * 700, myHero.pos)
+			if DistanceP < DistanceM and DistanceC < closest then
+				best = m
+				closest = DistanceC
+			end
+		end
+	end
+	return best
 end
