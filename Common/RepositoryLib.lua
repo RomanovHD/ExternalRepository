@@ -294,3 +294,17 @@ function GetFleeHero(range)
 	end
 	return best
 end
+
+
+function IsUnderTurret(unit)
+    for i = 1, Game.TurretCount() do
+        local turret = Game.Turret(i)
+        local range = (turret.boundingRadius + 750 + unit.boundingRadius / 2)
+        if turret.isEnemy and not turret.dead then
+            if turret.pos:DistanceTo(unit.pos) < range then
+                return true
+            end
+        end
+    end
+    return false
+end
